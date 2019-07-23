@@ -7,36 +7,36 @@ class Board:
         self.mines = mines
         self.board = ['.'] * (rows * cols)
 
-        # add mines
-        for _ in range(0, mines):
+        while mines > 0:
             x = random.randint(0, self.rows - 1)
             y = random.randint(0, self.cols - 1)
-            self.board[self.__idx__(x, y)] = 'X'
+            if self.board[self.__idx__(x, y)] != 'X':
+                self.board[self.__idx__(x, y)] = 'X'
+                mines -= 1
 
+    def calculate(self):
         # calculations
-        for x in range(0, rows):
-            for y in range(0, cols):
-                if self.board[self.__idx__(x, y)] == 'X':
-                    break
+        for x in range(0, self.rows):
+            for y in range(0, self.cols):
+                if self.board[self.__idx__(x, y)] != 'X':
+                    amount = 0
 
-                amount = 0
+                    cells = [
+                        self.__mine__(x - 1, y - 1),
+                        self.__mine__(x - 1, y),
+                        self.__mine__(x - 1, y + 1),
+                        self.__mine__(x, y - 1),
+                        self.__mine__(x, y + 1),
+                        self.__mine__(x + 1, y - 1),
+                        self.__mine__(x + 1, y),
+                        self.__mine__(x + 1, y + 1)
+                    ]
 
-                cells = [
-                    self.__mine__(x - 1, y - 1),
-                    self.__mine__(x - 1, y),
-                    self.__mine__(x - 1, y + 1),
-                    self.__mine__(x, y - 1),
-                    self.__mine__(x, y + 1),
-                    self.__mine__(x + 1, y - 1),
-                    self.__mine__(x + 1, y),
-                    self.__mine__(x + 1, y + 1)
-                ]
+                    for val in cells:
+                        amount += val
 
-                for val in cells:
-                    amount += val
-
-                if amount > 0:
-                    self.board[self.__idx__(x, y)] = amount
+                    if amount > 0:
+                        self.board[self.__idx__(x, y)] = amount
 
     def __idx__(self, x, y):
         return x * self.cols + y
