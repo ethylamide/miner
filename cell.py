@@ -39,7 +39,7 @@ class Cell:
             self._marked = not self._marked
 
     def __str__(self):
-        if self._marked:
+        if self._marked and not self._showed:
             return "M"
         elif self._showed:
             if self._mined:

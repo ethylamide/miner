@@ -63,17 +63,35 @@ class TestGame(unittest.TestCase):
         board = Board(rows=4, cols=4, mines=3)
         board.calculate()
         # view = BoardView(board)
-
         game = GameState(board)
         game.open_cell(0, 0)
 
         # view.render()
 
-        self.assertEqual(game.is_game_over(), True)
-        self.assertEqual(game.explosed, True)
+        self.assertEqual(game.is_game_over(), True, "")
+        self.assertEqual(game.explosed, True, "")
 
     def test_is_game_over(self):
+        random.seed(5945)
+
         board = Board(rows=4, cols=4, mines=3)
+        board.calculate()
+        # view = BoardView(board)
+
+        # view.render()
+
+        game = GameState(board)
+        game.open_cell(2, 0)
+
+        game.mark_cell(1, 3)
+        game.mark_cell(2, 3)
+        game.discover_cell(1, 2)
+        game.discover_cell(2, 2)
+
+        # view.render()
+
+        self.assertEqual(game.explosed, False, "Explosed must be false")
+        self.assertEqual(game.is_game_over(), True, "Game over must be true")
 
 if __name__ == '__main__':
     unittest.main()

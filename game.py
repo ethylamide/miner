@@ -6,80 +6,30 @@ class GameState:
         self.marked_mines = 0
         self.is_over = False
         self.explosed = False
+        self._opened = 0
 
     def open_cell(self, x, y):
-        """Open cell at given point"""
-
-        # if marked or opened - do nothing
-        # else:
-        # check cell on bomb
-        # if bomb self.is_over = True
-        # else if cell have number - just open 1 cell
-        # else open all blank cells connected to current blank cell
-        #      and open cells that are neightbored to blank cells
+        """Open cell and discover cells around if not a bomb"""
 
         cell = self.board.cell(x, y)
 
-        if not cell.is_showed() or cell.is_marked():
+        if not (cell.is_showed() or cell.is_marked()):
+            self._opened += 1
             cell.show()
             if cell.is_mined():
                 self.explosed = True
             elif cell.is_blank():
-                self.discover_cells(x, y)
+                self._discover_cells(x, y)
+        self.is_over = self._opened == self.board.rows * self.board.cols - self.board.mines
 
     def mark_cell(self, x, y):
-        """Open cell at given point with bomb"""
-
-        # check cell if it opened before - do nothing
-        # else mark cell as bomb if unmarked
-        # else unmark if marked
+        """Mark or unmark cell"""
 
         self.board.cell(x, y).toggleMark()
 
 
-    def discover_cells(self, x, y):
-        # open all blank cells connected to current blank cell
-        # and open cells that are neightbored to blank cells
-
-        visited = set()
-        queue = Queue()
-
-        self.board.cell(x, y).show()
-
-        for p in self.board.neighbors(x, y):
-            cell = self.board.cell(p[0], p[1])
-            if not cell.is_showed():
-                if cell.is_blank():
-                    queue.push((p[0], p[1]))
-                # open num cells
-                if cell.is_valued():
-                    cell.show()
-
-        visited.add((x, y))
-
-        while not queue.isEmpty():
-            (nx, ny) = queue.pop()
-            if not (nx, ny) in visited:
-                self.board.cell(nx, ny).show()
-                visited.add((nx, ny))
-
-                for p in self.board.neighbors(nx, ny):
-                    if not p in visited:
-                        cell = self.board.cell(p[0], p[1])
-                        if not cell.is_showed():
-                            if cell.is_blank():
-                                queue.push((p[0], p[1]))
-                            # open num cells
-                            if cell.is_valued():
-                                cell.show()
-
     def discover_cell(self, x, y):
         """Open closed cells around given point"""
-
-        # if not opened - do nothing
-        # else
-        # check that point have proper marked cells around
-        # open all closed neightbored cells
 
         cell = self.board.cell(x, y)
 
@@ -95,7 +45,44 @@ class GameState:
                 for p in neighbors:
                     self.open_cell(p[0], p[1])
 
+    def opened(self):
+        self._opened
+
     def is_game_over(self):
         """Check is game over"""
 
         return self.is_over or self.explosed
+
+    def _discover_cells(self, x, y):
+        visited = set()
+        queue = Queue()
+
+        for p in self.board.neighbors(x, y):
+            cell = self.board.cell(p[0], p[1])
+            if not cell.is_showed():
+                if cell.is_blank():
+                    queue.push((p[0], p[1]))
+                # open num cells
+                if cell.is_valued():
+                    self._opened += 1
+                    cell.show()
+
+        visited.add((x, y))
+
+        while not queue.isEmpty():
+            (nx, ny) = queue.pop()
+            if not (nx, ny) in visited:
+                self._opened += 1
+                self.board.cell(nx, ny).show()
+                visited.add((nx, ny))
+
+                for p in self.board.neighbors(nx, ny):
+                    if not p in visited:
+                        cell = self.board.cell(p[0], p[1])
+                        if not cell.is_showed():
+                            if cell.is_blank():
+                                queue.push((p[0], p[1]))
+                            # open num cells
+                            if cell.is_valued():
+                                self._opened += 1
+                                cell.show()
