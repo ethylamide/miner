@@ -38,7 +38,7 @@ class GameState:
 
             amount = 0
             for p in neighbors:
-                if self.board.cell(p[0], p[1]).is_mined():
+                if self.board.cell(p[0], p[1]).is_marked():
                     amount += 1
 
             if amount == cell.number_of_mines():
