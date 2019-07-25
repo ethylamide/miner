@@ -39,14 +39,14 @@ class Cell:
             self._marked = not self._marked
 
     def __str__(self):
-        if self._showed:
+        if self._marked:
+            return "M"
+        elif self._showed:
             if self._mined:
                 return "X"
             elif self._blank:
                 return "."
             else:
                 return str(self._value)
-        elif self._marked:
-            return "M"
         else:
             return " "

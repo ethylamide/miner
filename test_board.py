@@ -1,7 +1,6 @@
 import unittest
 from board import *
 from view import *
-import pdb
 
 class TestBoard(unittest.TestCase):
     def test_board_calculation(self):
@@ -9,7 +8,7 @@ class TestBoard(unittest.TestCase):
         board = Board(rows=4, cols=4, mines=3)
 
         for cell in board.board:
-            cell.open()
+            cell.show()
 
         BoardView(board).render()
         board.calculate()
