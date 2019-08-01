@@ -1,3 +1,4 @@
+import random
 from queue import *
 
 class GameState:
@@ -47,6 +48,16 @@ class GameState:
 
     def opened(self):
         self._opened
+
+    def get_random_blank_cell(self):
+        cells = []
+        for x in range(0, self.board.rows):
+            for y in range(0, self.board.cols):
+                if self.board.cell(x, y).is_blank():
+                    cells.append((x, y))
+
+        idx = random.randint(0, len(cells) - 1)
+        return cells[idx]
 
     def is_game_over(self):
         """Check is game over"""
