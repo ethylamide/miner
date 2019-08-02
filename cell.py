@@ -7,7 +7,7 @@ class Cell:
         self._marked = False
 
         self._mined = mined
-        self._blank = value == 0
+        self._blank = value == 0 and not mined
         self._value = value
 
     def is_mined(self):
