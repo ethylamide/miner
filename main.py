@@ -7,7 +7,7 @@ from board import *
 from game import *
 from view import *
 
-class Miner:
+class MineSweeper:
     def __init__(self, stdscr, rows, cols, mines):
         self.board = Board(rows, cols, mines)
         self.board.calculate()
@@ -168,7 +168,7 @@ def main(stdscr):
     if args.complexity in complexity:
         c = complexity[args.complexity]
 
-    miner = Miner(stdscr, c[0], c[1], c[2])
-    miner.run()
+    minesweeper = MineSweeper(stdscr, c[0], c[1], c[2])
+    minesweeper.run()
 
 curses.wrapper(main)
