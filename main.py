@@ -1,3 +1,5 @@
+# coding: utf-8
+
 from board import *
 from game import *
 from view import *
@@ -26,13 +28,6 @@ class Miner:
         # closed: black foreground
         curses.init_pair(0, curses.COLOR_BLACK, curses.COLOR_BLACK)
 
-        # opened blank
-        curses.init_pair(9, curses.COLOR_BLACK, curses.COLOR_WHITE)
-
-        # marked
-        curses.init_pair(10, curses.COLOR_RED, curses.COLOR_BLACK)
-        curses.init_pair(11, curses.COLOR_RED, curses.COLOR_WHITE)
-
         # opened nums
         curses.init_pair(1, 21,  curses.COLOR_WHITE)
         curses.init_pair(2, 76,  curses.COLOR_WHITE)
@@ -43,10 +38,39 @@ class Miner:
         curses.init_pair(7, 6,   curses.COLOR_WHITE)
         curses.init_pair(8, 8,   curses.COLOR_WHITE)
 
+        # opened blank
+        curses.init_pair(9, curses.COLOR_BLACK, curses.COLOR_WHITE)
+
+        # marked
+        curses.init_pair(10, curses.COLOR_RED, curses.COLOR_BLACK)
+        curses.init_pair(11, curses.COLOR_RED, curses.COLOR_WHITE)
+
+        # lines
+        curses.init_pair(12, curses.COLOR_WHITE, curses.COLOR_BLACK)
+
     def redraw(self):
         self.stdscr.move(0, 0)
 
+        # for x in range(0, self.board.rows):
+
+        tl = 0
+        tr = 1
+        bl = 2
+        br = 3
+
+        corners = ['┌', '┐', '└', '┘' ]
+
+        hor = 0
+        ver = 1
+        lines = ['─', '│']
+
+        self.stdscr.addstr(0, 0, corners[tl])
+        for x in range(1, 2 * (self.board.cols + 1)):
+            self.stdscr.addstr(0, x, lines[hor], curses.color_pair(12))
+        self.stdscr.addstr(0, 2 * self.board.cols + 2, corners[tr])
+
         for x in range(0, self.board.rows):
+            self.stdscr.addstr(x + 1, 0, lines[ver], curses.color_pair(12))
             for y in range(0, self.board.cols):
                 pair = 0
                 cell = self.board.cell(x, y)
@@ -60,14 +84,22 @@ class Miner:
                 elif cell.is_marked():
                     pair = 10
 
-                self.stdscr.addstr(x, 2 * y, str(cell), curses.color_pair(pair))
-                self.stdscr.addstr(x, 2 * y + 1, " ", curses.color_pair(pair))
+                self.stdscr.addstr(x + 1, 2 * (y + 1), str(cell), curses.color_pair(pair))
+                self.stdscr.addstr(x + 1, 2 * (y + 1) + 1, " ", curses.color_pair(pair))
+            self.stdscr.addstr(x + 1, 2 * self.board.cols + 2, lines[ver], curses.color_pair(12))
+
+        self.stdscr.addstr(self.board.rows + 1, 0, corners[bl])
+        self.stdscr.addstr(self.board.rows + 1, 1, lines[hor])
+        for x in range(0, self.board.cols):
+            self.stdscr.addstr(self.board.rows + 1, 2 * x + 2, lines[hor], curses.color_pair(12))
+            self.stdscr.addstr(self.board.rows + 1, 2 * x + 3, lines[hor], curses.color_pair(12))
+        self.stdscr.addstr(self.board.rows + 1, 2 * self.board.cols + 2, corners[br])
 
         self.move_cursor()
         self.stdscr.refresh()
 
     def move_cursor(self):
-        self.stdscr.move(self.board_pos[0], self.board_pos[1] * 2)
+        self.stdscr.move(self.board_pos[0] + 1, 2 * (self.board_pos[1] + 1))
 
     def run(self):
         while True:
