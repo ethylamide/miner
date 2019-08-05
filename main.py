@@ -1,13 +1,15 @@
 # coding: utf-8
 
+import argparse
+import curses
+
 from board import *
 from game import *
 from view import *
-import curses
 
 class Miner:
-    def __init__(self, stdscr):
-        self.board = Board(rows = 26, cols = 13, mines = 75)
+    def __init__(self, stdscr, rows, cols, mines):
+        self.board = Board(rows, cols, mines)
         self.board.calculate()
         self.game = GameState(self.board)
 
@@ -151,7 +153,22 @@ class Miner:
             self.stdscr.getch()
 
 def main(stdscr):
-    miner = Miner(stdscr)
+    complexity = {
+        'easy': (12, 6, 10),
+        'medium': (20, 10, 35),
+        'hard': (26, 13, 75)
+    }
+
+    parser = argparse.ArgumentParser()
+    parser.add_argument('--complexity', help='game complexity: easy|medium|hard')
+    args = parser.parse_args()
+
+    c = complexity['medium']
+
+    if args.complexity in complexity:
+        c = complexity[args.complexity]
+
+    miner = Miner(stdscr, c[0], c[1], c[2])
     miner.run()
 
 curses.wrapper(main)
