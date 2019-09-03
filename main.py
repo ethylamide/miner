@@ -3,9 +3,9 @@
 import argparse
 import curses
 
-from board import *
-from game import *
-from view import *
+from board import Board
+from game import GameState
+
 
 class MineSweeper:
     def __init__(self, stdscr, rows, cols, mines):
@@ -60,7 +60,7 @@ class MineSweeper:
         bl = 2
         br = 3
 
-        corners = ['┌', '┐', '└', '┘' ]
+        corners = ['┌', '┐', '└', '┘']
 
         hor = 0
         ver = 1
@@ -86,16 +86,22 @@ class MineSweeper:
                 elif cell.is_marked():
                     pair = 10
 
-                self.stdscr.addstr(x + 1, 2 * (y + 1), str(cell), curses.color_pair(pair))
-                self.stdscr.addstr(x + 1, 2 * (y + 1) + 1, " ", curses.color_pair(pair))
-            self.stdscr.addstr(x + 1, 2 * self.board.cols + 2, lines[ver], curses.color_pair(12))
+                self.stdscr.addstr(x + 1, 2 * (y + 1), str(cell),
+                                   curses.color_pair(pair))
+                self.stdscr.addstr(x + 1, 2 * (y + 1) + 1, " ",
+                                   curses.color_pair(pair))
+            self.stdscr.addstr(x + 1, 2 * self.board.cols + 2, lines[ver],
+                               curses.color_pair(12))
 
         self.stdscr.addstr(self.board.rows + 1, 0, corners[bl])
         self.stdscr.addstr(self.board.rows + 1, 1, lines[hor])
         for x in range(0, self.board.cols):
-            self.stdscr.addstr(self.board.rows + 1, 2 * x + 2, lines[hor], curses.color_pair(12))
-            self.stdscr.addstr(self.board.rows + 1, 2 * x + 3, lines[hor], curses.color_pair(12))
-        self.stdscr.addstr(self.board.rows + 1, 2 * self.board.cols + 2, corners[br])
+            self.stdscr.addstr(self.board.rows + 1, 2 * x + 2, lines[hor],
+                               curses.color_pair(12))
+            self.stdscr.addstr(self.board.rows + 1, 2 * x + 3, lines[hor],
+                               curses.color_pair(12))
+        self.stdscr.addstr(self.board.rows + 1, 2 * self.board.cols + 2,
+                           corners[br])
 
         self.move_cursor()
         self.stdscr.refresh()
@@ -152,6 +158,7 @@ class MineSweeper:
         if self.game_over:
             self.stdscr.getch()
 
+
 def main(stdscr):
     complexity = {
         'easy': (12, 6, 10),
@@ -160,7 +167,8 @@ def main(stdscr):
     }
 
     parser = argparse.ArgumentParser()
-    parser.add_argument('--complexity', help='game complexity: easy|medium|hard')
+    parser.add_argument('--complexity',
+                        help='game complexity: easy|medium|hard')
     args = parser.parse_args()
 
     c = complexity['medium']
@@ -170,5 +178,6 @@ def main(stdscr):
 
     minesweeper = MineSweeper(stdscr, c[0], c[1], c[2])
     minesweeper.run()
+
 
 curses.wrapper(main)

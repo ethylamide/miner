@@ -1,5 +1,6 @@
 import random
-from queue import *
+from queue import Queue
+
 
 class GameState:
     def __init__(self, board):
@@ -27,7 +28,6 @@ class GameState:
         """Mark or unmark cell"""
 
         self.board.cell(x, y).toggleMark()
-
 
     def discover_cell(self, x, y):
         """Open closed cells around given point"""
@@ -88,7 +88,7 @@ class GameState:
                 visited.add((nx, ny))
 
                 for p in self.board.neighbors(nx, ny):
-                    if not p in visited:
+                    if p not in visited:
                         cell = self.board.cell(p[0], p[1])
                         if not cell.is_showed():
                             if cell.is_blank():

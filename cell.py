@@ -1,5 +1,5 @@
 class Cell:
-    def __init__(self, mined = False, value = 0):
+    def __init__(self, mined=False, value=0):
         # value: blank | mine | value(i)
         # state: showed | hidden
 

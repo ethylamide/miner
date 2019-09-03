@@ -1,8 +1,9 @@
 import random
 from cell import Cell
 
+
 class Board:
-    def __init__(self, rows = 26, cols = 13, mines = 75):
+    def __init__(self, rows=26, cols=13, mines=75):
         self.rows = rows
         self.cols = cols
         self.mines = mines
@@ -28,7 +29,9 @@ class Board:
                 cell = self.board[self._idx(x, y)]
 
                 if not cell.is_mined():
-                    cells = list(filter(lambda p: self.cell(p[0], p[1]).is_mined(), self.neighbors(x, y)))
+                    cells = list(filter(lambda p:
+                                        self.cell(p[0], p[1]).is_mined(),
+                                        self.neighbors(x, y)))
                     amount = len(cells)
 
                     if amount > 0:
@@ -47,12 +50,12 @@ class Board:
         return ((x >= 0 and x < self.rows) and (y >= 0 and y < self.cols))
 
     def neighbors(self, x, y):
-         points = [(x - 1, y - 1),
-                   (x - 1, y),
-                   (x - 1, y + 1),
-                   (x, y - 1),
-                   (x, y + 1),
-                   (x + 1, y - 1),
-                   (x + 1, y),
-                   (x + 1, y + 1)]
-         return list(filter(lambda p: self._is_in_bound(p[0], p[1]), points))
+        points = [(x - 1, y - 1),
+                  (x - 1, y),
+                  (x - 1, y + 1),
+                  (x, y - 1),
+                  (x, y + 1),
+                  (x + 1, y - 1),
+                  (x + 1, y),
+                  (x + 1, y + 1)]
+        return list(filter(lambda p: self._is_in_bound(p[0], p[1]), points))
