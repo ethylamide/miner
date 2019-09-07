@@ -4,6 +4,7 @@ import argparse
 import curses
 
 from board import Board
+
 from game import GameState
 
 

@@ -1,6 +1,8 @@
-import unittest
 import random
+import unittest
+
 from board import Board
+
 from game import GameState
 # from view import BoardView
 
